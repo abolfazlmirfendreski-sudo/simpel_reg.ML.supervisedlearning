@@ -1,0 +1,36 @@
+import numpy as np 
+import seaborn as sns
+import pandas as pd 
+from sklearn import linear_model
+import sklearn.metrics as sm
+from sklearn.model_selection import train_test_split 
+import matplotlib.pyplot as plt
+
+df=pd.read_csv('co2.csv')
+
+
+sns.countplot(x='out1',data=df)
+
+plt.subplots(figsize=(9,9))
+sns.heatmap(df.corr(),annot=True)
+
+x=df.drop("out1",axis=1)
+x=x.drop("fuelcomb",axis=1)
+x=x.drop("cylandr",axis=1)
+x=x.drop("fuelcity",axis=1)
+x=x.drop("fuelwy",axis=1)
+y=df.out1
+
+model=linear_model.LinearRegression()
+
+X_train,X_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+
+
+model.fit(X_train,y_train)
+
+
+out_robot=model.predict(X_test)
+
+plt.scatter(X_test,y_test,color='red')
+plt.plot(X_test,out_robot,color='black',linewidth=2)
+plt.show()
